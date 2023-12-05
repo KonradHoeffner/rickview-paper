@@ -5,13 +5,15 @@
 \usepackage{csquotes}
 \usepackage{siunitx}
 \usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{booktabs}
 \renewcommand\UrlFont{\color{blue}\rmfamily}
 \newcommand\citep[1]{\cite{#1}}
 \urlstyle{rm}
 \hypersetup{pdfauthor={Konrad Höffner},pdftitle={RickView: Lightweight Standalone Knowledge Graph Browsing Powered by Rust}}
 
 \begin{document}
-\title{RickView: Lightweight Standalone Knowledge Graph Browsing Powered by Rust}
+\title{RickView: Lightweight Standalone Knowledge Graph Browsing}
 %\titlerunning{Abbreviated paper title}
 \author{Konrad Höffner\inst{1}\orcidID{0000-0001-7358-3217}}
 \authorrunning{K. Höffner}
@@ -22,7 +24,7 @@
 %
 \begin{abstract}
 The standard backends for RDF browsers are SPARQL endpoints, which allow expressive queries, but they are overengineered for the simple task of browsing.
-RickView is an RDF browser that follows an alternative approach of directly querying an in-memory dataset bypassing SPARQL.
+RickView is an URI dereferenciation tool and RDF browser that follows an alternative approach of directly querying an in-memory dataset bypassing SPARQL.
 It is implemented in Rust, which enables a high level of performance comparable to C and C++ while being memory-safe and thread-safe by design.
 RickView is published as a single binary, optionally wrapped in a compact container image, without dependencies on external components.
 It is adaptable to a given knowledge base via defaults that can be changed in a configuration file and overridden with environment variables.
@@ -33,17 +35,10 @@ These features enable the stable long-term, low-maintenance, robust, simple and 
 
 \section{Introduction}\label{summary}
 
-\begin{figure}
-\includegraphics{img/relatedwork.pdf}
-\caption{Source: \cite{adaptinglodview}.
-\label{fig:relatedwork}
-\end{figure}
-
 Search, browsing and exploration is a critical area in the linked data (LD) life cycle.
 Similar to web browsers, where users enter the URL of a website and receive a display of an HTML document, in RDF browsers,
 users enter the URL of an RDF resource and receive a human readable representation.
 However in contrast to websites, RDF resources are intended to be processed by machines and do not provide a standardized way of being displayed.
-\citep{adaptinglodview}
 %An RDF graph, also called a knowledge graph, property graph or knowledge base, is a set of RDF triples in the form of \emph{(subject, predicate, object)} and typically describes a common domain under a shared namespace, which can be abbreviated with a prefix, such as \texttt{rdf}.
 %For example, the RDF vocabulary has a \enquote{hash namespace} (ending with a \texttt{\#}) of \texttt{http://www.w3.org/1999/02/22-rdf-syntax-ns\#},
 %which signifies that all resources, like \texttt{rdf:type} and \texttt{rdf:property}, of the vocabulary are described in the same document.
@@ -74,6 +69,44 @@ RDF browsers describe the direct neighborhood of a resource in an RDF graph, tha
 RickView is a read-only visualization for static data, does not offer other visualization types~\citep{linkeddatavisualization}, such as graph based, and is not a search engine.
 It is not designed for data that does not fit on one machine (\enquote{big data}) or indeed data that does not fit on RAM.
 Extremely large knowledge graphs, such as the complete DBpedia, are better served with the traditional SPARQL endpoint paradigm.
+
+\section{Related Work}\label{relatedwork}
+Among the various kinds of LOD visualization tools (see \cref{fig:relatedwork}), RickView is an \emph{RDF and LOD browser} that fulfills three of the four criteria defined in~\cite{adaptinglodview} for a \emph{Pubby-class tool}:
+It is (1) a URI dereferencing tool, (2) a LOD visualization tool and (3) an RDF browser.
+However by design it is \emph{not} (4) a SPARQL endpoint interface because it does not retrieve information about resources from a SPARQL endpoint but instead from its in-memory representation of the dataset.
+%Among the listed 
+\citep{adaptinglodview} identifies limitations of LodView which are partially fixed in a unmaintained fork~\footnote{\url{https://github.com/ManlyMan1/LodView_Cyrillic}} with the last change being from 2020.
+A pull request to integrate into the original LodView\footnote{\url{https://github.com/LodLive/LodView}} was originally planned but has not yet been created.
+
+\begin{tabular}{lll}
+\toprule
+Feature												&LodView	&RickView\\
+Resolution of Cyrillic URIs							&\\
+Decoding Cyrillic URIs in Turtle representations	&\\
+Support of Cyrillic literals						&\\
+User-friendly URLs for RDF representations			&&\\
+Support of hash URIs			&&\\
+Expanding nested resources			&&\\
+Support of RDF collections			&&\\
+Pagination of resource property values			&&\\
+Support of LATEX math notation			&&\\
+\midrule
+\bottomrule
+\end{tabular}
+
+%\begin{enumerate}
+%\item a URI dereferenciation tool, i.e. when a client requests the URI of an RDF resource via HTTP protocol, the tool handles the request and responds with a resource representation;
+%\item a LOD visualization tool, i.e. it represents the resource in human-friendly visual form;
+%\item a Linked Data or RDF browser, i.e. it allows a user to navigate between RDF resources of an RDF dataset or the entire LOD cloud, by following links in resource representations;
+%\end{enumerate}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{img/relatedwork.pdf}
+\caption{Categorization of LOD visualization tools. Source: \cite{adaptinglodview}.}
+\label{fig:relatedwork}
+\end{figure}
 
 \section{Statement of need}\label{statement-of-need}
 
