@@ -21,21 +21,33 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
+The standard backends for RDF browsers are SPARQL endpoints, which allow expressive queries, but they are overengineered for the simple task of browsing.
+RickView is an RDF browser that follows an alternative approach of directly querying an in-memory dataset bypassing SPARQL.
+It is implemented in Rust, which enables a high level of performance comparable to C and C++ while being memory-safe and thread-safe by design.
+RickView is published as a single binary, optionally wrapped in a compact container image, without dependencies on external components.
+It is adaptable to a given knowledge base via defaults that can be changed in a configuration file and overridden with environment variables.
+It supports the binary RDF format Header Dictionary Triples (HDT), which allows querying compressed RDF in memory.
+These features enable the stable long-term, low-maintenance, robust, simple and fast publication of multiple RDF knowledge graphs on low-end hardware.
 \keywords{Linked Data browser \and RDF visualization.}
 \end{abstract}
-Leipzig University \\ 
 
-\section{Summary}\label{summary}
+\section{Introduction}\label{summary}
+
+\begin{figure}
+\includegraphics{img/relatedwork.pdf}
+\caption{Source: \cite{adaptinglodview}.
+\label{fig:relatedwork}
+\end{figure}
 
 Search, browsing and exploration is a critical area in the linked data (LD) life cycle.
 Similar to web browsers, where users enter the URL of a website and receive a display of an HTML document, in RDF browsers,
 users enter the URL of an RDF resource and receive a human readable representation.
 However in contrast to websites, RDF resources are intended to be processed by machines and do not provide a standardized way of being displayed.
-
-An RDF graph, also called a knowledge graph, property graph or knowledge base, is a set of RDF triples in the form of \emph{(subject, predicate, object)} and typically describes a common domain under a shared namespace, which can be abbreviated with a prefix, such as \texttt{rdf}.
-For example, the RDF vocabulary has a \enquote{hash namespace} (ending with a \texttt{\#}) of \texttt{http://www.w3.org/1999/02/22-rdf-syntax-ns\#},
-which signifies that all resources, like \texttt{rdf:type} and \texttt{rdf:property}, of the vocabulary are described in the same document.
-This is suitable for small graphs that are not intended to be viewed by non-expert users.
+\citep{adaptinglodview}
+%An RDF graph, also called a knowledge graph, property graph or knowledge base, is a set of RDF triples in the form of \emph{(subject, predicate, object)} and typically describes a common domain under a shared namespace, which can be abbreviated with a prefix, such as \texttt{rdf}.
+%For example, the RDF vocabulary has a \enquote{hash namespace} (ending with a \texttt{\#}) of \texttt{http://www.w3.org/1999/02/22-rdf-syntax-ns\#},
+%which signifies that all resources, like \texttt{rdf:type} and \texttt{rdf:property}, of the vocabulary are described in the same document.
+%This is suitable for small graphs that are not intended to be viewed by non-expert users.
 
 RDF browsers on the other hand \emph{resolve URIs} (URLs) of knowledge graphs with \enquote{slash namespaces} (ending with a \enquote{/} character), so that each resource has its associated page.
 Ideally, they offer a machine processable RDF serialization as well, based on either content negotiation, POST parameters or URL variants such as \texttt{http://mynamespace/myresource.ttl}.
