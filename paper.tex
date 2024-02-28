@@ -1,4 +1,5 @@
-\documentclass[runningheads]{llncs}
+%\let\pdfcreationdate=\creationdate % pdfx bug workaround when using tectonic to compile
+\documentclass{ceurart}
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -7,20 +8,43 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{booktabs}
-\renewcommand\UrlFont{\color{blue}\rmfamily}
-\newcommand\citep[1]{\cite{#1}}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+%\newcommand\citep[1]{\cite{#1}}
 \urlstyle{rm}
 \hypersetup{pdfauthor={Konrad Höffner},pdftitle={RickView: Lightweight Standalone Knowledge Graph Browsing Powered by Rust}}
 
+%%
+%% One can fix some overfulls
+\sloppy
+
+%%
+%% Minted listings support 
+%% Need pygment <http://pygments.org/> <http://pypi.python.org/pypi/Pygments>
+%\usepackage{listings}
+%% auto break lines
+%\lstset{breaklines=true}
+
+%%
+%% end of the preamble, start of the body of the document source.
 \begin{document}
+\copyrightyear{2024}
+\copyrightclause{Copyright for this paper by its authors. Use permitted under Creative Commons License Attribution 4.0 International (CC BY 4.0).}
+\conference{D2R2’24: Third International Workshop on Linked Data-driven Resilience Research 2024}
 \title{RickView: Lightweight Standalone Knowledge Graph Browsing}
 %\titlerunning{Abbreviated paper title}
-\author{Konrad Höffner\inst{1}\orcidID{0000-0001-7358-3217}}
-\authorrunning{K. Höffner}
-\institute{Institute for Medical Informatics, Statistics and Epidemiology (IMISE), Leipzig University, Leipzig, Germany
-\email{konrad.hoeffner@uni-leipzig.de}}
-%
-\maketitle              % typeset the header of the contribution
+\author[1]{Konrad Höffner}[%
+orcid=0000-0001-7358-3217,
+email=konrad.hoeffner@uni-leipzig.de,
+url=https://github.com/KonradHoeffner
+]
+\cormark[1]
+\fnmark[1]
+\address[1]{Institute for Medical Informatics, Statistics and Epidemiology (IMISE), Leipzig University, Leipzig, Germany}
+%% Footnotes
+\cortext[1]{Corresponding author.}
+
+%\authorrunning{K. Höffner}
+
 %
 \begin{abstract}
 The standard backends for RDF browsers are SPARQL endpoints, which allow expressive queries, but they are overengineered for the simple task of browsing.
@@ -30,8 +54,10 @@ RickView is published as a single binary, optionally wrapped in a compact contai
 It is adaptable to a given knowledge base via defaults that can be changed in a configuration file and overridden with environment variables.
 It supports the binary RDF format Header Dictionary Triples (HDT), which allows querying compressed RDF in memory.
 These features enable the stable long-term, low-maintenance, robust, simple and fast publication of multiple RDF knowledge graphs on low-end hardware.
-\keywords{Linked Data browser \and RDF visualization.}
 \end{abstract}
+\begin{keywords}Linked Data browser \sep RDF visualization.\end{keywords}
+
+\maketitle
 
 \section{Introduction}\label{summary}
 
@@ -103,7 +129,7 @@ Support of LATEX math notation			&&\\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{img/relatedwork.pdf}
+%\includegraphics[width=0.7\textwidth]{img/relatedwork.pdf}
 \caption{Categorization of LOD visualization tools. Source: \cite{adaptinglodview}.}
 \label{fig:relatedwork}
 \end{figure}
@@ -139,23 +165,20 @@ It is implemented in Rust, which enables a high level of performance comparable 
 In order to keep the focus on performance and to get a baseline of functionality for performance evaluation, the web page layout is in large parts copied
 over from LodView~\citep{lodview,adaptinglodview}.
 %
-RickView supports the binary RDF format \emph{Header Dictionary Triples (HDT)}~\citep{hdt2012} which allows querying compressed RDF in memory using the hdt-rs library~\citep{hdtrs}.
-This allows RickView to serve LinkedSpending\footnote{\url{https://linkedspending.aksw.org}}~\citep{linkedspending} v2015, which takes \SI{28}{\giga\byte} as uncompressed N-Triples and \SI{1.4}{\giga\byte} as HDT, using less than \SI{2}{\giga\byte} RAM.
-%
-Additional deployments include HITO\footnote{\url{https://hitontology.eu/ontology}}~\citep{hito}, SNIK\footnote{\url{https://www.snik.eu/ontology}}~\citep{snik},
- and ANNO\footnote{\url{https://annosaxfdm.de/ontology}}.
+		RickView supports the binary RDF format \emph{Header Dictionary Triples (HDT)}~\citep{hdt2012} which allows querying compressed RDF in memory using the hdt-rs library~\citep{hdtrs}.
+		This allows RickView to serve LinkedSpending\footnote{\url{https://linkedspending.aksw.org}}~\citep{linkedspending} v2015, which takes \SI{28}{\giga\byte} as uncompressed N-Triples and \SI{1.4}{\giga\byte} as HDT, using less than \SI{2}{\giga\byte} RAM.
+		%
+		Additional deployments include HITO\footnote{\url{https://hitontology.eu/ontology}}~\citep{hito}, SNIK\footnote{\url{https://www.snik.eu/ontology}}~\citep{snik},
+		 and ANNO\footnote{\url{https://annosaxfdm.de/ontology}}.
 
-RickView is published under the MIT License at \url{https://github.com/KonradHoeffner/rickview} and as Docker image at \url{ghcr.io/konradhoeffner/rickview}.
+		RickView is published under the MIT License at \url{https://github.com/KonradHoeffner/rickview} and as Docker image at \url{ghcr.io/konradhoeffner/rickview}.
 
-\begin{credits}
-\subsubsection{\ackname}
-Thanks to Simon Bin.
-
-\subsubsection{\discintname}
-The author has no competing interests to declare that are relevant to the content of this article.
-\end{credits}
-%
-\bibliographystyle{splncs04}
-\bibliography{paper}
+		\begin{acknowledgments}
+		Thanks to Simon Bin.
+		%The author has no competing interests to declare that are relevant to the content of this article.
+		\end{acknowledgments}
+		%
+		%\bibliographystyle{splncs04}
+		\bibliography{paper}
 
 \end{document}

@@ -1,3 +1,5 @@
-# should be 2023/11/02 v2.23
-wget -nc http://mirrors.ctan.org/macros/latex/contrib/llncs/llncs.cls
-wget -nc http://mirrors.ctan.org/macros/latex/contrib/llncs/splncs04.bst
+wget -nc http://ceur-ws.org/Vol-XXX/CEURART.zip
+unzip CEURART.zip
+cp CEURART/ceurart.cls .
+cp CEURART/cc-by.pdf .
+cp CEURART/elsarticle-num-names.bst .

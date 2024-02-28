@@ -14,3 +14,9 @@ Cargo.lock
 llncs.cls
 splncs04.bst
 samplepaper.*
+CEURART.zip
+CEURART
+ceurart.cls
+*.abs
+*.xmpdata
+elsarticle-num-names.bst
