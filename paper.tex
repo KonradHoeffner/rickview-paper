@@ -60,8 +60,18 @@ These features enable the stable long-term, low-maintenance, robust, simple and 
 \maketitle
 
 \section{Introduction}\label{summary}
+% integrate this, translated from German
+Symbolic AI methods involve formal knowledge representation in the form of ontologies and knowledge graphs, which are described using the Web Ontology Language (OWL) and the Resource Description Framework (RDF). In the vision of the Semantic Web, existing data silos are replaced by providing represented knowledge in its entirety in forms that are accessible to both humans and agents (programs).
+These methods are widely used by industry, for example, for intelligent searches through the Google Knowledge Graph, but contrary to the vision, both the knowledge graphs and the tools are not shared with the public.
+On the other hand, a multitude of knowledge graphs are created in academic research projects with limited duration, which lack the personnel or technical resources to build and operate the necessary technical infrastructure. Even if successful, in the event of a critical component failure, responsibility is unclear as those responsible are either working on new projects or have left the institution.
+The result is knowledge graphs that either are not published according to established standards, or require maintenance, energy, and resource-intensive operations, ultimately leading to longer or even permanent outages.
 
+%\section{Statement of need}\label{statement-of-need}
+While initial enthusiasm in the Semantic Web field has led to a large amount of published knowledge graphs, mainstream adoption has stagnated due to a lack of freely available performant, accessible, robust and adaptable tools~\citep{semanticwebreview}.
+Instead, limited duration research grants motivate the proliferation of countless research prototypes, which are not optimized for any of those criteria, are not maintained after the project ends and compete for resources on crowded servers if they do not break down completely.
+While there are are several existing RDF browsers, they are not optimized for performance.
 Search, browsing and exploration is a critical area in the linked data (LD) life cycle.
+
 Similar to web browsers, where users enter the URL of a website and receive a display of an HTML document, in RDF browsers,
 users enter the URL of an RDF resource and receive a human readable representation.
 However in contrast to websites, RDF resources are intended to be processed by machines and do not provide a standardized way of being displayed.
@@ -73,6 +83,10 @@ However in contrast to websites, RDF resources are intended to be processed by m
 RDF browsers on the other hand \emph{resolve URIs} (URLs) of knowledge graphs with \enquote{slash namespaces} (ending with a \enquote{/} character), so that each resource has its associated page.
 Ideally, they offer a machine processable RDF serialization as well, based on either content negotiation, POST parameters or URL variants such as \texttt{http://mynamespace/myresource.ttl}.
 RDF browsers describe the direct neighborhood of a resource in an RDF graph, that is they list all triples where the given resource is either the subject (a \emph{direct connection}) or the object (an \emph{inverse connection}).
+
+% auto translated, improve
+The submitted contribution, RickView (RV), is a low-threshold, resource-efficient URI dereferencer and RDF browser that publishes knowledge graphs according to the principles and standards of the Semantic Web in both human-readable and machine-processable form, thereby contributing to "Identification and resolution of structural problems in the basic components for compatible data/model exchange and AI" [KI].
+RV is free, open source [GI], and available in various forms, such as executable file [EX], container image [CI], or Rust Crate [RC]. RV integrates a web server and can therefore be operated independently without dependencies.
 
 \paragraph{RickView Design Goals}
 %RickView is an RDF browser with the following design goals:
@@ -91,17 +105,17 @@ RDF browsers describe the direct neighborhood of a resource in an RDF graph, tha
   simplicity: RickView is minimalistic and only offers browsing of static data
 \end{itemize}
 
-\paragraph{Non goals}
-RickView is a read-only visualization for static data, does not offer other visualization types~\citep{linkeddatavisualization}, such as graph based, and is not a search engine.
-It is not designed for data that does not fit on one machine (\enquote{big data}) or indeed data that does not fit on RAM.
-Extremely large knowledge graphs, such as the complete DBpedia, are better served with the traditional SPARQL endpoint paradigm.
-
 \section{Related Work}\label{relatedwork}
+
+
 Among the various kinds of LOD visualization tools (see \cref{fig:relatedwork}), RickView is an \emph{RDF and LOD browser} that fulfills three of the four criteria defined in~\cite{adaptinglodview} for a \emph{Pubby-class tool}:
 It is (1) a URI dereferencing tool, (2) a LOD visualization tool and (3) an RDF browser.
 However by design it is \emph{not} (4) a SPARQL endpoint interface because it does not retrieve information about resources from a SPARQL endpoint but instead from its in-memory representation of the dataset.
 %Among the listed 
-\citep{adaptinglodview} identifies limitations of LodView which are partially fixed in a unmaintained fork~\footnote{\url{https://github.com/ManlyMan1/LodView_Cyrillic}} with the last change being from 2020.
+
+\subsection{LodView}
+
+\citep{adaptinglodview} identifies limitations of LodView for the deployment of Ruthes, which are partially fixed in a unmaintained fork\footnote{\url{https://github.com/ManlyMan1/LodView\_Cyrillic}} with the last change being from 2020.
 A pull request to integrate into the original LodView\footnote{\url{https://github.com/LodLive/LodView}} was originally planned but has not yet been created.
 
 \begin{tabular}{lll}
@@ -135,25 +149,66 @@ Support of LATEX math notation			&&\\
 \end{figure}
 
 \section{Use Cases}
+Current RickView deployments include the following knowledge graphs:
+
+\begin{table}
+\begin{tabular}{lrSSSSS}
+\toprule
+Knowledge Graph	&\textnormal{Size in MiB}	&\textnormal{LodView}	&\textnormal{Virtuoso 7.2.12}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView 0.2.13}\\
+\midrule
+SNIK v24.03		&2.0						&						&127.8							&								&23.4\\
+HITO v24.02		&1.0						&						&110.2							&								&18.2\\
+ANNO			&\\
+LinkedSpending	&\\
+\bottomrule
+\end{tabular}
+\label{tab:stats}
+% todo correct versions
+\caption{Knowledge graph serialized size (uncompressed RDF Turtle) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 1.2.3 and RickView 1.2.3.
+File sizes and memory usage in MiB.}
+\end{table}
+
+\subsection{Small Knowledge Bases: SNIK, HITO and ANNO}
+SNIK\footnote{The \emph{Semantic Network of Information Management in Hospitals}, deployed at \url{https://www.snik.eu/ontology}.}~\citep{snik},
+%HITO\footnote{The \emph{Health IT Ontology}, deployed at \url{https://hitontology.eu/ontology}.}~\citep{hito}
+HITO\footnote{The Health IT Ontology [HITO] for systematic description of application systems and software products in healthcare.}~\citep{hito}
+and ANNO\footnote{The \emph{Anthropological Notation Ontology}, deployed at \url{https://annosaxfdm.de/ontology}.}~\citep{anno}
+exemplify small knowledge bases that were threatening the stablity of the server they were deployed on, together with many other small-scale services, due to RAM consumption, which led to the initial development of RickView.
+In those cases, the overhead of multiple docker containers with a SPARQL endpoint, Java virtual machine and LodView, is disproportionate to the size of the knowledge bases, see \cref{tab:stats}.
+%SNIK, HITO and many other small-scale services were threatening the stability of the .
+
+The Anthropological Notation Ontology [ANNO] for classification and representation of anatomical features of the skeletal system.
+
+\subsection{Large Knowledge Base: LinkedSpending}
+RickView supports the binary RDF format \emph{Header Dictionary Triples (HDT)}~\citep{hdt2012} which allows querying compressed RDF in memory using the hdt-rs library~\citep{hdtrs}.
+This allows RickView to serve LinkedSpending\footnote{\url{https://linkedspending.aksw.org}}~\citep{linkedspending} v2015, which takes \SI{28}{\giga\byte} as uncompressed N-Triples and \SI{1.4}{\giga\byte} as HDT, using less than \SI{2}{\giga\byte} RAM.
+LinkedSpending [LS] encompasses over two million planned and executed worldwide financial transactions converted from OpenSpending. RickView uses RDF HDT compression [HDT-RS] to compress the 28 GB raw data to less than 2 GB and publish it with low resources.
+
+\citep{linkedspending}
+\citep{hdt}
+
+\subsection{aksw.org}
+The Research Group Agile Knowledge Engineering and Semantic Web (AKSW) 
+Since been transferred to eccenca Corporate Memory
+This use case highlights the viability of RickView as an instantly deployable temporary solution to a 
+
+
+\subsection{RuThes}
+\citep{ruthes}
+Similar to LinkedSpending
+Cyrillic URLs
+The RuThes Cloud [RU], a linguistic resource for Russian, originally published with the LodView RDF browser but discontinued due to instability and high resource consumption, and revived by RV.
+
+-> LodView instance currently shut down because of memory usage
+-> test instance of RickView uses ...
+%\url{http://ruthes.org/download/ruthes-cloud-corrected-2.ttl.zip}
+\url{https://lod.ruthes.org/}
 SNIK/ANNO/HITO ?
 -> easier docker setup than virtuoso, less resources, Java 
 
-LinkedSpending
-frequent downtimes
-HDT
 
-RuThes
--> LodView instance currently shut down because of memory usage
--> test instance of RickView uses ...
-\url{http://ruthes.org/download/ruthes-cloud-corrected-2.ttl.zip}
 
 TODO: check presentation of Leipzig Semantic Web Day for reusable materials
-
-\section{Statement of need}\label{statement-of-need}
-
-While initial enthusiasm in the Semantic Web field has led to a large amount of published knowledge graphs, mainstream adoption has stagnated due to a lack of freely available performant, accessible, robust and adaptable tools~\citep{semanticwebreview}.
-Instead, limited duration research grants motivate the proliferation of countless research prototypes, which are not optimized for any of those criteria, are not maintained after the project ends and compete for resources on crowded servers if they do not break down completely.
-While there are are several existing RDF browsers, they are not optimized for performance.
 
 \section{Implementation}\label{implementation}
 
@@ -161,24 +216,32 @@ The standard back ends for LD projects are \emph{SPARQL endpoints}, which allow 
 For example, the popular Virtuoso Open-Source Edition maps SPARQL to SQL queries on top of a relational database, which is faster than native triplestores like Apache Jena but requires tuning of parameters like memory buffer sizes for optimal resource allocation and the RDF data model can cause large amounts of joins, which negatively impacts query runtime.
 
 RickView instead follows an alternative approach of directly querying an in-memory dataset bypassing SPARQL.
-It is implemented in Rust, which enables a high level of performance comparable to C and C++ while being memory-safe and thread-safe by design.
 In order to keep the focus on performance and to get a baseline of functionality for performance evaluation, the web page layout is in large parts copied
 over from LodView~\citep{lodview,adaptinglodview}.
 %
-		RickView supports the binary RDF format \emph{Header Dictionary Triples (HDT)}~\citep{hdt2012} which allows querying compressed RDF in memory using the hdt-rs library~\citep{hdtrs}.
-		This allows RickView to serve LinkedSpending\footnote{\url{https://linkedspending.aksw.org}}~\citep{linkedspending} v2015, which takes \SI{28}{\giga\byte} as uncompressed N-Triples and \SI{1.4}{\giga\byte} as HDT, using less than \SI{2}{\giga\byte} RAM.
-		%
-		Additional deployments include HITO\footnote{\url{https://hitontology.eu/ontology}}~\citep{hito}, SNIK\footnote{\url{https://www.snik.eu/ontology}}~\citep{snik},
-		 and ANNO\footnote{\url{https://annosaxfdm.de/ontology}}.
+%
+\subsection{Rust}
+It is implemented in Rust, which enables a high level of performance comparable to C and C++ while being memory-safe and thread-safe by design.
 
-		RickView is published under the MIT License at \url{https://github.com/KonradHoeffner/rickview} and as Docker image at \url{ghcr.io/konradhoeffner/rickview}.
+\subsection{HDT}
 
-		\begin{acknowledgments}
-		Thanks to Simon Bin.
-		%The author has no competing interests to declare that are relevant to the content of this article.
-		\end{acknowledgments}
-		%
-		%\bibliographystyle{splncs04}
-		\bibliography{paper}
+\subsection{Conditional Compilation}
+
+
+RickView is published under the MIT License at \url{https://github.com/KonradHoeffner/rickview}, as Docker image at \url{ghcr.io/konradhoeffner/rickview} and as Rust Crate at \url{https://crates.io/crates/rickview}.
+
+\section{Limitations}
+RickView is a read-only visualization for static data, does not offer other visualization types~\citep{linkeddatavisualization}, such as graph based, and is not a search engine.
+It is not designed for data that does not fit on one machine (\enquote{big data}) or indeed data that does not fit on RAM.
+Extremely large knowledge graphs, such as the complete DBpedia, are better served with the traditional SPARQL endpoint paradigm.
+
+
+\begin{acknowledgments}
+Thanks to Simon Bin.
+%The author has no competing interests to declare that are relevant to the content of this article.
+\end{acknowledgments}
+%
+%\bibliographystyle{splncs04}
+\bibliography{paper}
 
 \end{document}
