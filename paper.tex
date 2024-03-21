@@ -18,7 +18,7 @@
 \sloppy
 
 %%
-%% Minted listings support 
+%% Minted listings support
 %% Need pygment <http://pygments.org/> <http://pypi.python.org/pypi/Pygments>
 %\usepackage{listings}
 %% auto break lines
@@ -45,7 +45,7 @@ url=https://github.com/KonradHoeffner
 
 %\authorrunning{K. Höffner}
 
-%
+% clarify relationship to resilience
 \begin{abstract}
 The standard backends for RDF browsers are SPARQL endpoints, which allow expressive queries, but they are overengineered for the simple task of browsing.
 RickView is an URI dereferenciation tool and RDF browser that follows an alternative approach of directly querying an in-memory dataset bypassing SPARQL.
@@ -61,7 +61,10 @@ These features enable the stable long-term, low-maintenance, robust, simple and 
 
 \section{Introduction}\label{summary}
 % integrate this, translated from German
-Symbolic AI methods involve formal knowledge representation in the form of ontologies and knowledge graphs, which are described using the Web Ontology Language (OWL) and the Resource Description Framework (RDF). In the vision of the Semantic Web, existing data silos are replaced by providing represented knowledge in its entirety in forms that are accessible to both humans and agents (programs).
+% D2R2’24: Third International Workshop on Linked Data-driven Resilience Research 2024
+% We can skip this explanation as the target audience knows it already.
+%Symbolic AI methods involve formal knowledge representation in the form of ontologies and knowledge graphs, which are described using the Web Ontology Language (OWL) and the Resource Description Framework (RDF).
+%In the vision of the Semantic Web, existing data silos are replaced by providing represented knowledge in its entirety in forms that are accessible to both humans and agents (programs).
 These methods are widely used by industry, for example, for intelligent searches through the Google Knowledge Graph, but contrary to the vision, both the knowledge graphs and the tools are not shared with the public.
 On the other hand, a multitude of knowledge graphs are created in academic research projects with limited duration, which lack the personnel or technical resources to build and operate the necessary technical infrastructure. Even if successful, in the event of a critical component failure, responsibility is unclear as those responsible are either working on new projects or have left the institution.
 The result is knowledge graphs that either are not published according to established standards, or require maintenance, energy, and resource-intensive operations, ultimately leading to longer or even permanent outages.
@@ -107,11 +110,10 @@ RV is free, open source [GI], and available in various forms, such as executable
 
 \section{Related Work}\label{relatedwork}
 
-
 Among the various kinds of LOD visualization tools (see \cref{fig:relatedwork}), RickView is an \emph{RDF and LOD browser} that fulfills three of the four criteria defined in~\cite{adaptinglodview} for a \emph{Pubby-class tool}:
 It is (1) a URI dereferencing tool, (2) a LOD visualization tool and (3) an RDF browser.
 However by design it is \emph{not} (4) a SPARQL endpoint interface because it does not retrieve information about resources from a SPARQL endpoint but instead from its in-memory representation of the dataset.
-%Among the listed 
+%Among the listed
 
 \subsection{LodView}
 
@@ -148,24 +150,32 @@ Support of LATEX math notation			&&\\
 \label{fig:relatedwork}
 \end{figure}
 
+
+\subsection{RDF Libraries}
+
+\subsection{Header Dictionary Triples (HDT)}
+
+% ******************************************************************
 \section{Use Cases}
 Current RickView deployments include the following knowledge graphs:
 
 \begin{table}
-\begin{tabular}{lrSSSSS}
+\begin{tabular}{lSSSSSSS}
 \toprule
-Knowledge Graph	&\textnormal{Size in MiB}	&\textnormal{LodView}	&\textnormal{Virtuoso 7.2.12}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView 0.2.13}\\
+% triples SNIK 44584, HITO, ANNO, linkedspending					
+Knowledge Graph	&\textnormal{k triples}		&\textnormal{Size in MiB}	&\textnormal{LodView}	&\textnormal{Virtuoso}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView}\\
 \midrule
-SNIK v24.03		&2.0						&						&127.8							&								&23.4\\
-HITO v24.02		&1.0						&						&110.2							&								&18.2\\
-ANNO			&\\
-LinkedSpending	&\\
+SNIK v24.03		&44.6						&2.0						&						&127.8							&								&23.4\\
+HITO v24.02		&							&1.0						&						&110.2							&								&18.2\\
+ANNO			&							&\\
+LinkedSpending	&							&28256.6					&						&								&								&1973.2\\
 \bottomrule
 \end{tabular}
 \label{tab:stats}
 % todo correct versions
-\caption{Knowledge graph serialized size (uncompressed RDF Turtle) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 1.2.3 and RickView 1.2.3.
-File sizes and memory usage in MiB.}
+\caption{Knowledge graph serialized size (uncompressed N-Triples) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 7.2.12 and RickView 0.2.13 of SNIK v24.03, HITO v24.02, ANNO v00000 and LinkedSpending v2015.
+LinkedSpending uses the compressed HDT mode, see \cref{sec:hdt}.
+File sizes and memory usage in MiB rounded to one decimal place.}
 \end{table}
 
 \subsection{Small Knowledge Bases: SNIK, HITO and ANNO}
@@ -174,7 +184,9 @@ SNIK\footnote{The \emph{Semantic Network of Information Management in Hospitals}
 HITO\footnote{The Health IT Ontology [HITO] for systematic description of application systems and software products in healthcare.}~\citep{hito}
 and ANNO\footnote{The \emph{Anthropological Notation Ontology}, deployed at \url{https://annosaxfdm.de/ontology}.}~\citep{anno}
 exemplify small knowledge bases that were threatening the stablity of the server they were deployed on, together with many other small-scale services, due to RAM consumption, which led to the initial development of RickView.
-In those cases, the overhead of multiple docker containers with a SPARQL endpoint, Java virtual machine and LodView, is disproportionate to the size of the knowledge bases, see \cref{tab:stats}.
+In those cases, the overhead of multiple Docker containers with a SPARQL endpoint, Java virtual machine and LodView, is disproportionate to the size of the knowledge bases, see \cref{tab:stats}.
+This overhead can be reduced by sharing a single SPARQL endpoint, Java virtual machine (if required) and web server for all knowledge graphs published by a single server, but that is not practical for a modern, container based deployment,
+which must be isolated from others in case of failure and must be able to be developed, updated and moved separately.
 %SNIK, HITO and many other small-scale services were threatening the stability of the .
 
 The Anthropological Notation Ontology [ANNO] for classification and representation of anatomical features of the skeletal system.
@@ -188,9 +200,9 @@ LinkedSpending [LS] encompasses over two million planned and executed worldwide 
 \citep{hdt}
 
 \subsection{aksw.org}
-The Research Group Agile Knowledge Engineering and Semantic Web (AKSW) 
+The Research Group Agile Knowledge Engineering and Semantic Web (AKSW)
 Since been transferred to eccenca Corporate Memory
-This use case highlights the viability of RickView as an instantly deployable temporary solution to a 
+This use case highlights the viability of RickView as an instantly deployable temporary solution to a
 
 
 \subsection{RuThes}
@@ -204,7 +216,7 @@ The RuThes Cloud [RU], a linguistic resource for Russian, originally published w
 %\url{http://ruthes.org/download/ruthes-cloud-corrected-2.ttl.zip}
 \url{https://lod.ruthes.org/}
 SNIK/ANNO/HITO ?
--> easier docker setup than virtuoso, less resources, Java 
+-> easier docker setup than virtuoso, less resources, Java
 
 
 
@@ -223,7 +235,7 @@ over from LodView~\citep{lodview,adaptinglodview}.
 \subsection{Rust}
 It is implemented in Rust, which enables a high level of performance comparable to C and C++ while being memory-safe and thread-safe by design.
 
-\subsection{HDT}
+\subsection{HDT}\label{sec:hdt}
 
 \subsection{Conditional Compilation}
 
