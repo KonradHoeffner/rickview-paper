@@ -160,22 +160,24 @@ Support of LATEX math notation			&&\\
 Current RickView deployments include the following knowledge graphs:
 
 \begin{table}
-\begin{tabular}{lSSSSSSS}
+\begin{tabular}{lrrcSSSSS}
 \toprule
 % triples SNIK 44584, HITO, ANNO, linkedspending					
-Knowledge Graph	&\textnormal{k triples}		&\textnormal{Size in MiB}	&\textnormal{LodView}	&\textnormal{Virtuoso}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView}\\
+Knowledge Graph	&\textnormal{triples}		&\textnormal{N-Triples}	&\textnormal{HDT}	&\textnormal{LodView}	&\textnormal{Virtuoso}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView}\\
 \midrule
-SNIK v24.03		&44.6						&2.0						&						&127.8							&								&23.4\\
-HITO v24.02		&							&1.0						&						&110.2							&								&18.2\\
-ANNO			&							&\\
-LinkedSpending	&							&28256.6					&						&								&								&1973.2\\
+SNIK	 		&45\,k~						&2.0\,MiB				& ---				&561					&207					&767							&23.4\\
+HITO 			&14\,k~						&1.0\,MiB				& ---				&553					&121					&674								&18.2\\
+ANNO			&30\,k~						&3.5\,MiB				& ---				&						&						&								&22.3\\
+Ruthes			&15\,M						&3.7\,GiB				&146\,MiB			&						&						&								&203.4\\
+LinkedSpending	&1350\,M					&28.2\,GiB				&1.4\,GiB			&						&						&								&1975.3\\
 \bottomrule
 \end{tabular}
 \label{tab:stats}
 % todo correct versions
-\caption{Knowledge graph serialized size (uncompressed N-Triples) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 7.2.12 and RickView 0.2.13 of SNIK v24.03, HITO v24.02, ANNO v00000 and LinkedSpending v2015.
+\caption{Knowledge graph serialized size (uncompressed N-Triples) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 7.2.12 and RickView 0.2.13 of SNIK v24.03, HITO v24.02, ANNO v24.02 and LinkedSpending v2015.
 LinkedSpending uses the compressed HDT mode, see \cref{sec:hdt}.
-File sizes and memory usage in MiB rounded to one decimal place.}
+%File sizes and memory usage in MiB rounded to one decimal place.
+}
 \end{table}
 
 \subsection{Small Knowledge Bases: SNIK, HITO and ANNO}
@@ -206,7 +208,7 @@ This use case highlights the viability of RickView as an instantly deployable te
 
 
 \subsection{RuThes}
-\citep{ruthes}
+\citep{adaptinglodview}
 Similar to LinkedSpending
 Cyrillic URLs
 The RuThes Cloud [RU], a linguistic resource for Russian, originally published with the LodView RDF browser but discontinued due to instability and high resource consumption, and revived by RV.
