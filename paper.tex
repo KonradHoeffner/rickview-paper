@@ -160,7 +160,7 @@ Support of LATEX math notation			&&\\
 Current RickView deployments include the following knowledge graphs:
 
 \begin{table}
-\begin{tabular}{lrrcSSSSS}
+\begin{tabular}{lrrcSrrS}
 \toprule
 % triples SNIK 44584, HITO, ANNO, linkedspending					
 Knowledge Graph	&\textnormal{triples}		&\textnormal{N-Triples}	&\textnormal{HDT}	&\textnormal{LodView}	&\textnormal{Virtuoso}	&\textnormal{LodView+Virtuoso}	&\textnormal{RickView}\\
@@ -175,6 +175,8 @@ LinkedSpending	&1350\,M					&28.2\,GiB				&1.4\,GiB			&539					&290--4077				&82
 \label{tab:stats}
 % todo correct versions
 \caption{Knowledge graph serialized size (uncompressed N-Triples) and total deployment RAM consumption of LodView 1.2.3, Virtuoso 7.2.12 and RickView 0.2.13 of SNIK v24.03, HITO v24.02, ANNO v24.02 and LinkedSpending v2015.
+The minimum default Virtuoso memory settings of 10000 buffers and 6000 maximum dirty buffers are used.
+Virtuoso used 4077 MiB after initial loading but only 290 MiB after a restart with an existing database.
 LinkedSpending uses the compressed HDT mode, see \cref{sec:hdt}.
 %File sizes and memory usage in MiB rounded to one decimal place.
 }
